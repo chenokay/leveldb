@@ -54,9 +54,9 @@ int SailDbServer::init()
 {
   leveldb::Options options;	
   // 10 MB cache
-  options.block_cache = leveldb::NewLRUCache(10 * 1048576);
+  options.block_cache = leveldb::NewLRUCache(100 * 1048576);
   // bloom filter 
-  options.filter_policy = leveldb::NewBloomFilterPolicy(10);
+  options.filter_policy = leveldb::NewBloomFilterPolicy(50);
   options.create_if_missing = true;
 
   leveldb::Status status = leveldb::DB::Open(options, "./data/testdb", &_db);

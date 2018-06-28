@@ -24,7 +24,7 @@ class SailDbHandle : public SailDbIf {
      Status::type Put(const std::string& key, const std::string& value)
      {
 
-        DOMOB_STL_CPP::Timer timer;
+        SELIB_UTIL::Timer timer;
         leveldb::Status s = _db->Put(leveldb::WriteOptions(), key, value);
         
         int us = timer.usec_elapsed();
@@ -40,7 +40,7 @@ class SailDbHandle : public SailDbIf {
 
      void Get(Reponse& _return, const std::string& key)
      {
-        DOMOB_STL_CPP::Timer timer;
+        SELIB_UTIL::Timer timer;
         if (NULL == _db) {
             printf("db is NULL\n");
             _return.errCode = Status::FAILURE;
@@ -49,7 +49,7 @@ class SailDbHandle : public SailDbIf {
         leveldb::Status s = _db->Get(leveldb::ReadOptions(), key, &(_return.value));
         int us = timer.usec_elapsed();
 
-        printf("get key:%s; time:%d\n", key.c_str(), us);
+        //printf("get key:%s; time:%d\n", key.c_str(), us);
         
         if (s.ok()) {
             _return.errCode = Status::SUCC;

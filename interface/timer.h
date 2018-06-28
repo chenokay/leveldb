@@ -1,19 +1,23 @@
-#ifndef _UTIL_TIMER_
-#define _UTIL_TIMER_
+//selib is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//	reference from other engineer
+//
+#ifndef SELIB_TIMER
+#define SELIB_TIMER
 
 #include <time.h>
 #include <errno.h>
 
-namespace DOMOB_STL_CPP {
+namespace SELIB_UTIL {
 
-//
-// 简单的计时器
-// 调用start后可以多次调用check，每次调用check，都可以取到从start到当前的用时
-// 采用clock_gettime(CLOCK_MONOTONIC, ...) 函数来进行计时，这样避免了gettimeofday的
-//       计时时间非单调的缺陷，避免出现计时结果异常的情况发生，同时保证了高精度计时
-//       参考：http://tdistler.com/2010/06/27/high-performance-timing-on-linux-windows
-//             http://blog.habets.pp.se/2010/09/gettimeofday-should-never-be-used-to-measure-time
-//
 class Timer
 {
 	public:
@@ -25,67 +29,50 @@ class Timer
 
 		void clear()
 		{
-			_start_t.tv_sec = 0;
-			_start_t.tv_nsec = 0;
-			_check_t.tv_sec = 0;
-			_check_t.tv_nsec = 0;
+			start_time.tv_sec = 0;
+			start_time.tv_nsec = 0;
+			check_point_time.tv_sec = 0;
+			check_point_time.tv_nsec = 0;
 		}
 
-		// 
-		// 重新开始计时
-		// 
 		void restart()
 		{
-			clock_gettime(CLOCK_MONOTONIC, &_start_t);
-			_check_t = _start_t;
+			clock_gettime(CLOCK_MONOTONIC, &start_time);
+			check_point_time = start_time;
 		}
-
-		//
-		// 从 start 到 check 经过的时间，以 nano second 为单位
-		//
+		
 		long nsec_elapsed()
 		{
 			check();
-			return (_check_t.tv_sec - _start_t.tv_sec) * 1000000000L +
-				(_check_t.tv_nsec - _start_t.tv_nsec);
+			return (check_point_time.tv_sec - start_time.tv_sec) * 1000000000L +
+				(check_point_time.tv_nsec - start_time.tv_nsec);
 		}
-
-		//
-		// 从 start 到 check 经过的时间，以 usec 为单位
-		//
+		
 		long usec_elapsed()
 		{
 			return nsec_elapsed() / 1000L;
 		}
-
-		//
-		// 从 start 到 check 经过的时间，以 msec 为单位
-		//
+		
 		long msec_elapsed()
 		{
 			return usec_elapsed() / 1000L;
 		}
-
-		//
-		// 从 start 到 check 经过的时间，以 sec 为单位
-		//
+		
 		long sec_elapsed()
 		{
 			return msec_elapsed() / 1000l;
 		}
 	private:
-		//
-		// 记录时间点，用于取得从上次 start 到 check 之间经过的时间
-		//
+		
 		void check()
 		{
-			clock_gettime(CLOCK_MONOTONIC, &_check_t);
+			clock_gettime(CLOCK_MONOTONIC, &check_point_time);
 		}
 
-		struct timespec _start_t;  // the beginning time
-		struct timespec _check_t;  // the check point time
+		struct timespec start_time;  
+		struct timespec check_point_time;  
 };
 
-}  // end namespace
+}  
 
 #endif
