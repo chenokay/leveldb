@@ -19,8 +19,8 @@ APP_OUTPUT = $(OUTPUT_DIR)/bin/saildb
 SYS_LIB_DIR = /usr/local/lib
 
 LFLAGS = -L${SYS_LIB_DIR} \
-	-lthrift -lcrypto -ldomoblib \
-	-llog4cpp -lthriftnb\
+	-lthrift -lcrypto  \
+	 -lthriftnb\
 	-levent
 
 CFLAGS = ${CFLAGS_BASIC} 
@@ -30,7 +30,7 @@ CFLAGS_BASIC = -g -O2 -W -Wall -Wpointer-arith -fPIC \
 	       -Wunused-value
 
 INCLUDEDIR =  -I$(DOMOB_STL_LIB_DIR)/include -I$(DM303_DIR)/include -I$(THRIFT_DIR)/include/domob_thrift  -I$(THRIFT_DIR)/include -I$(THRIFT_SYS_DIR) -I$(BOOST_DIR) -I. 
-BASE_LDLIB =  -ldomoblib -llog4cpp -lthrift -lboost_regex -lcurl -liconv -lcrypto -lm -lz -lpthread -lboost_filesystem -lrt -levent -ldomob_thrift_interface -ldm303 -lleveldb
+BASE_LDLIB =    -lthrift -lboost_regex  -lcrypto -lm -lz -lpthread -lboost_filesystem -lrt -levent -lleveldb
 LIBDIR = -L$(DOMOB_STL_LIB_DIR)/lib -L$(DM303_DIR)/lib -L$(THRIFT_DIR)/lib -L.
 
 default: dir saildb
